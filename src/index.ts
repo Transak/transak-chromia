@@ -1,10 +1,10 @@
 import {
   createAmount,
-  createInMemoryFtKeyStore,
   createKeyStoreInteractor,
   createConnection,
   gtv,
   createAmountFromBalance,
+  createInMemoryEvmKeyStore,
 } from "@chromia/ft4";
 import { createClient, encryption, newSignatureProvider } from "postchain-client";
 import { networks } from './config';
@@ -14,9 +14,7 @@ import { Network, GetTransactionResult, SendTransactionResult, SendTransactionPa
 const createChromiaClient = async (network: string, blockchainRid: string) => {
 
   const networkInfo = getNetwork(network)
-  //Connection setup
   const nodeUrl = networkInfo.networkUrl
-  // const blockchainRid = "C7D5D9E5222E8AF3F13FE973581CAA78C7824E10D23A247C3DA9A5F7AA9E417F";
   const chromiaClient = await createClient({
     nodeUrlPool: nodeUrl,
     blockchainRid: blockchainRid,
@@ -84,7 +82,6 @@ async function getBalance(network: string, publicKey: string, tokenAddress: stri
   if (!balanceAmount) return 0
   const balanceValue = createAmountFromBalance(balanceAmount, balances?.amount.decimals)
   const valueInNumber = Number(balanceValue.value) / (10 ** balanceValue.decimals);
-  console.log("balanceValue", valueInNumber)
   return valueInNumber
 }
 
@@ -103,7 +100,6 @@ async function getTransaction(txnId: string, network: string, blockchainRid: str
     // if status is confirmed then fetch details
     if (transactionStatus.status === "confirmed") {
       transactionData = await chromiaClient.getTransactionInfo(transactionBuffer)
-      console.log("transaction", transactionData)
     }
     return {
       transactionData: JSON.parse(JSON.stringify(transactionData)),
@@ -139,21 +135,15 @@ async function getTransaction(txnId: string, network: string, blockchainRid: str
 async function sendTransaction({ to, amount, network, privateKey, decimals, tokenAddress, publicKey, blockchainRid }: SendTransactionParams): Promise<SendTransactionResult> {
   const chromiaClient = await createChromiaClient(network, blockchainRid)
   const senderKeyPair = encryption.makeKeyPair(privateKey);
-  // Get the sender's account ID
   const senderId = publicKey
 
-  // Get the recipient's account ID
-  const recipientId = to
-
-  // Define the amount to transfer (including decimal places)
-  const amountToSend = createAmount(amount, decimals); // Transfers 10 tokens with 6 decimal places
-  // Create a session for the sender account
-  const { getSession } = createKeyStoreInteractor(chromiaClient, createInMemoryFtKeyStore(senderKeyPair));
+  const recipientId = Buffer.from(to, 'hex');
+  const assetId = Buffer.from(tokenAddress, 'hex');
+  const amountToSend = createAmount(amount, decimals); 
+  const { getSession } = createKeyStoreInteractor(chromiaClient, createInMemoryEvmKeyStore(senderKeyPair));
   const session = await getSession(senderId);
-
-  // Transfer the assets
-  const trasferDetails = await session.account.transfer(recipientId, tokenAddress, amountToSend);
-
+  const trasferDetails = await session.account.transfer(recipientId, assetId, amountToSend);
+  const transactionHash = Buffer.from(trasferDetails.receipt.transactionRid).toString('hex')
   return {
     transactionData: { trasferDetails },
     receipt: {
@@ -165,8 +155,8 @@ async function sendTransaction({ to, amount, network, privateKey, decimals, toke
       network,
       nonce: 0,
       to,
-      transactionHash: trasferDetails.receipt.transactionRid.toString(),
-      transactionLink: getTransactionLink(trasferDetails.receipt.transactionRid.toString(), network),
+      transactionHash: transactionHash,
+      transactionLink: getTransactionLink(transactionHash, network),
     },
   };
 }
