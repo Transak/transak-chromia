@@ -134,7 +134,7 @@ export type Network = {
 };
 ```
 
-- `networkName`: The name of the network (e.g., `mainnet`, `testnet`).
+- `networkName`: The name of the network (e.g., `main`, `testnet`).
 - `transactionLink`: A function that generates a link to view a transaction on the explorer.
 - `walletLink`: A function that generates a link to view a wallet on the explorer.
 - `networkUrl`: The base URL of the Chromia node.
