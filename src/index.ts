@@ -17,7 +17,7 @@ const createChromiaClient = async (network: string, blockchainRid: string) => {
   const nodeUrl = networkInfo.networkUrl
   const chromiaClient = await createClient({
     nodeUrlPool: nodeUrl,
-    blockchainRid: blockchainRid,
+    blockchainRid
   });
 
   return chromiaClient
@@ -155,7 +155,7 @@ async function sendTransaction({ to, amount, network, privateKey, decimals, toke
       network,
       nonce: 0,
       to,
-      transactionHash: transactionHash,
+      transactionHash,
       transactionLink: getTransactionLink(transactionHash, network),
     },
   };
