@@ -102,10 +102,10 @@ async function getTransaction(txnId: string, network: string, blockchainRid: str
       transactionData = await chromiaClient.getTransactionInfo(transactionBuffer)
     }
     return {
-      transactionData: JSON.parse(JSON.stringify(transactionData)),
+      transactionData: transactionData ? JSON.parse(JSON.stringify(transactionData)): {},
       receipt: {
         from: '',
-        date: transactionData.timestamp,
+        date: transactionData && transactionData.timestamp ? transactionData.timestamp : null,
         gasCostCryptoCurrency: 'CHR',
         gasCostInCrypto: 0,
         gasLimit: 0,
@@ -118,6 +118,7 @@ async function getTransaction(txnId: string, network: string, blockchainRid: str
         nonce: 0,
         transactionHash: txnId,
         transactionLink: getTransactionLink(txnId, network),
+        rejectReason: transactionStatus.rejectReason ? transactionStatus.rejectReason : ""
       },
     };
   } catch (error) {
@@ -125,7 +126,6 @@ async function getTransaction(txnId: string, network: string, blockchainRid: str
     return null
   }
 }
-
 
 /**
  * Send the transaction to the chromia network

@@ -22,6 +22,7 @@ export type GetTransactionResult = {
     nonce: number;
     transactionHash: string;
     transactionLink: string;
+    rejectReason?: string
   };
 };
 
@@ -49,6 +50,7 @@ export type SendTransactionResult = {
     transactionHash: string;
     transactionLink: string;
     transactionReceipt: any;
+    rejectReason?: string
   };
 };
 
