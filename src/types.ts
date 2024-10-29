@@ -1,6 +1,6 @@
 export type Network = {
   networkName: string;
-  transactionLink: (arg0: string) => string;
+  transactionLink: (arg0: string, arg1: string) => string;
   walletLink: (arg0: string) => string;
   networkUrl: string;
 };
