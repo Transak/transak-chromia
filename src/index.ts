@@ -127,7 +127,6 @@ async function getTransaction(txnId: string, network: string, blockchainRid: str
   }
 }
 
-getTransaction("26eac1a58c779bf95895f2f92a20bca8d225716d65d54dad97d834996a6ab116", "kovan", "C7D5D9E5222E8AF3F13FE973581CAA78C7824E10D23A247C3DA9A5F7AA9E417F").then(console.log).catch(console.log)
 /**
  * Send the transaction to the chromia network
  * @param param0
