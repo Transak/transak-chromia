@@ -52,7 +52,7 @@ const isValidWalletAddress = async (address: string) => {
  * @param network
  * @returns
  */
-const getTransactionLink = (txId: string, network: string) => getNetwork(network).transactionLink(txId) as string;
+const getTransactionLink = (txId: string, network: string, blockchainRid: string) => getNetwork(network).transactionLink(txId, blockchainRid) as string;
 
 /**
  * get wallet link for the given address
@@ -117,7 +117,7 @@ async function getTransaction(txnId: string, network: string, blockchainRid: str
         network,
         nonce: 0,
         transactionHash: txnId,
-        transactionLink: getTransactionLink(txnId, network),
+        transactionLink: getTransactionLink(txnId, network, blockchainRid),
         rejectReason: transactionStatus.rejectReason ? transactionStatus.rejectReason : ""
       },
     };
@@ -127,6 +127,7 @@ async function getTransaction(txnId: string, network: string, blockchainRid: str
   }
 }
 
+getTransaction("26eac1a58c779bf95895f2f92a20bca8d225716d65d54dad97d834996a6ab116", "kovan", "C7D5D9E5222E8AF3F13FE973581CAA78C7824E10D23A247C3DA9A5F7AA9E417F").then(console.log).catch(console.log)
 /**
  * Send the transaction to the chromia network
  * @param param0
@@ -156,7 +157,7 @@ async function sendTransaction({ to, amount, network, privateKey, decimals, toke
       nonce: 0,
       to,
       transactionHash,
-      transactionLink: getTransactionLink(transactionHash, network),
+      transactionLink: getTransactionLink(transactionHash, network, blockchainRid),
     },
   };
 }
