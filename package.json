@@ -1,6 +1,6 @@
 {
   "name": "@transak/transak-chromia",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -27,7 +27,7 @@
   "license": "ISC",
   "dependencies": {
     "@chromia/ft4": "^1.0.1",
-    "postchain-client": "^1.19.0"
+    "postchain-client": "^1.19.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
