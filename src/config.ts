@@ -4,7 +4,7 @@ export const networks: Record<string, Network> = {
   main: {
     transactionLink: (signature, blockchainRid) => `https://explorer.chromia.com/mainnet/transaction/${blockchainRid}/${signature}`,
     walletLink: address => `https://explorer.chromia.com/mainnet/wallet/${address}`,
-    networkUrl: 'https://acala-rpc.dwellir.com',
+    networkUrl: 'https://system.chromaway.com/',
     networkName: 'mainnet',
   },
   testnet: {
