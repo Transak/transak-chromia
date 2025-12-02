@@ -6,7 +6,7 @@ import {
   createAmountFromBalance,
   createInMemoryEvmKeyStore,
 } from "@chromia/ft4";
-import { createClient, encryption, newSignatureProvider } from "postchain-client";
+import { createClient, encryption, NetworkSettings, newSignatureProvider } from "postchain-client";
 import { networks } from './config';
 import { Network, GetTransactionResult, SendTransactionResult, SendTransactionParams, getFeeStatsResult } from './types';
 
@@ -15,10 +15,15 @@ const createChromiaClient = async (network: string, blockchainRid: string) => {
 
   const networkInfo = getNetwork(network)
   const nodeUrl = networkInfo.networkUrl
-  const chromiaClient = await createClient({
-    nodeUrlPool: nodeUrl,
-    blockchainRid
-  });
+  const clientOpts: NetworkSettings = { blockchainRid };
+
+  if (networkInfo.directoryNodeUrlPool) {
+    clientOpts.directoryNodeUrlPool = networkInfo.directoryNodeUrlPool;
+  } else {
+    clientOpts.nodeUrlPool = nodeUrl;
+  }
+
+  const chromiaClient = await createClient(clientOpts);
 
   return chromiaClient
 }

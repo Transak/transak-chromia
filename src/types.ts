@@ -3,6 +3,7 @@ export type Network = {
   transactionLink: (arg0: string, arg1: string) => string;
   walletLink: (arg0: string) => string;
   networkUrl: string;
+  directoryNodeUrlPool?: string[];
 };
 
 export type GetTransactionResult = {
